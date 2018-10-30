@@ -54,7 +54,7 @@ class StrikeZone extends React.Component {
         return <div className={classes.container}>
           <div className={classes.strikeZone}>
               <Draggable bounds="parent" onStop={this.onDragEnd}>
-                  <img alt="baseball" src={baseball} width={25} height={25}/>
+                  <img alt="baseball" src={baseball} width={25} height={25} draggable={false} />
               </Draggable>
           </div>
         </div>;
