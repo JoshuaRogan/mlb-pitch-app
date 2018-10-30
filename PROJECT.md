@@ -1,7 +1,9 @@
 Build a front end application using statcast data that answers a specific and unique question. 
 
 **Decided**
-Simple UI to select the type of pitch and count and determine who would be the best and worse hitter to have hit it (Filter by team, position, etc)
+
+1) Simple UI that selects pitch, location, rotation, (and maybe others) and gives the most likely outputs
+2) Simple UI to select the type of pitch and count and determine who would be the best and worse hitter to have hit it (Filter by team, position, etc)
 * Drag and drop the location of the ball in virtual strike zone
 * Velocity meter
 * Pitch type selection
