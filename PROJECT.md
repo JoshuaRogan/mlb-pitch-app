@@ -26,11 +26,12 @@ Build a front end application using statcast data that answers a specific and un
 
 --------------------------------
 ### Future Ideas
+* Scrolling player/team stat https://baseballsavant.mlb.com/player-scroll?player_id=434378#spray
 * Hit probability UI
   * Looks at all pitches that are 'similar' to a thrown pitch and result from the data. If it matches indicate what the likely outcome of that result is
   * https://baseballsavant.mlb.com/statcast_hit_probability
   * https://baseballsavant.mlb.com/statcast_search?hfPT=FF%7C&hfAB=&hfBBT=&hfPR=hit%5C.%5C.into%5C.%5C.play%7Chit%5C.%5C.into%5C.%5C.play%5C.%5C.no%5C.%5C.out%7Chit%5C.%5C.into%5C.%5C.play%5C.%5C.score%7C&hfZ=&stadium=&hfBBL=&hfNewZones=&hfGT=R%7C&hfC=&hfSea=2018%7C&hfSit=&player_type=pitcher&hfOuts=&opponent=&pitcher_throws=&batter_stands=&hfSA=&game_date_gt=&game_date_lt=&hfInfield=&team=&position=&hfOutfield=&hfRO=&home_road=&hfFlag=&hfPull=&metric_1=&hfInn=&min_pitches=0&min_results=0&group_by=name&sort_col=pitches&player_event_sort=h_launch_speed&sort_order=desc&min_pas=0#results
-* 
+* Look at https://twitter.com/darenw 
 * https://statsapi.mlb.com/api/v1/game/531060/playByPlay?timecode=20180803_182458
 * Application that determines which is the best pitch pitcher is the best to throw against a given batter and count. 
    * Even of pitches that don't exist (put rails on this though)
@@ -51,3 +52,4 @@ Build a front end application using statcast data that answers a specific and un
 ### Implementation
 * Use AWS/Google to run the table rollups to answer questions from the front end
 
+---------------------

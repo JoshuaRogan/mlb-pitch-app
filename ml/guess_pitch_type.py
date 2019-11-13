@@ -1,23 +1,37 @@
 import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 from keras.models import Sequential
-from keras.layers import Dense, Activation
-from keras.utils import to_categorical
+from keras.layers import Dense, Activation, Dropout
+from keras.utils import print_summary, to_categorical, plot_model
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from keras.layers.normalization import BatchNormalization
+
 import numpy as np
 from numpy import argmax
 
 # Guess the pitch type
-
-BATCH_SIZE = 32
-TRAIN_SIZE = .8
-KEYS = ['pitch_type', 'release_speed', 'release_pos_x', 'release_pos_z', 'release_pos_y' 'zone', 'pfx_x', 'pfx_z', 'plate_x', 'plate_z']
-KEYS = ['pitch_type', 'release_speed']
+BATCH_SIZE = 10
+TRAIN_SIZE = .80
+KEYS = ['pitch_type', 'release_speed', 'release_pos_x', 'release_pos_z', 'release_pos_y',
+        'release_spin_rate', 'zone', 'pfx_x', 'pfx_z', 'plate_x', 'plate_z', 'vx0', 'vy0', 'vz0',
+        'ax', 'ay', 'pitcher']
+# KEYS = ['pitch_type', 'release_speed', 'release_spin_rate', 'zone', 'pfx_x', 'pfx_z', 'plate_x',
+#         'plate_z', 'vx0', 'vy0', 'vz0','ax', 'ay']
+# KEYS = ['pitch_type', 'pfx_x', 'pfx_z']
+# KEYS = ['pitch_type', 'release_speed']
 LABELS_KEY = 'pitch_type'
+# DATA_FILE = '../data/2018_pitchers_all.csv'
+DATA_FILE = '../data/braves_pitchers_2019.csv'
+# DATA_FILE = '../data/folty.csv'
 
-data = pd.read_csv("../data/folty.csv")  # 89 Columns
-data = data.dropna(subset=[LABELS_KEY])  # Delete rows with empty pitch_types
-data = data.replace({'FF': 0, 'SL': 1, 'CH': 2, 'CU': 3, 'FT': 4}) # Convert pitches to nums
+data = pd.read_csv(DATA_FILE)  # 89 Columns
+data = data.dropna(subset=KEYS)  # Delete rows with empty data points
+data = data[data.pitch_type != 'PO'] # Very rare pitch (pitch out)
+data = data[data.pitch_type != 'KN'] # Very rare pitch (knuckle ball)
+label_names = data.pitch_type.unique()
+data = data.replace({label_names[i] : i for i in range(0, len(label_names) ) })
 data = data.filter(KEYS)
 
+num_labels = label_names.size
 num_rows = data.shape[0]
 num_features = data.shape[1]
 
@@ -27,54 +41,47 @@ test_data = data.tail(num_rows - (int)(num_rows * TRAIN_SIZE))
 train_labels = train_data['pitch_type'].values
 test_labels = test_data['pitch_type'].values
 
-train_data = train_data.drop(columns=['pitch_type'])
-test_data = test_data.drop(columns=['pitch_type'])
+if train_data.pitch_type.unique().size != test_data.pitch_type.unique().size:
+    print("data sizes not equal")
+    exit(0)
 
+# train_data = train_data.drop(columns=['pitch_type'])
+# test_data = test_data.drop(columns=['pitch_type'])
+
+# https://www.reddit.com/r/MachineLearning/comments/6xvnwo/d_my_neural_network_isnt_working_what_should_i_do/
 model = Sequential()
-model.add(Dense(BATCH_SIZE, activation='relu', input_dim=num_features - 1))
-model.add(Dense(5, activation='sigmoid'))
-model.compile(optimizer='rmsprop',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+
+# Input Layer
+model.add(Dense(num_labels, input_dim=train_data.shape[1]))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+
+# Output Layer (more than one values so need a probabilty)
+model.add(Dense(num_labels))
+model.add(BatchNormalization())
+model.add(Activation(activation='sigmoid'))
+
 
 model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
-#
-# # Generate dummy data
-#
-# data = np.random.random((1000, 100))
-# labels = np.random.randint(2, size=(1000, 1))
-#
-# # Train the model, iterating on the data in batches of 32 samples
-model.fit(train_data, to_categorical(train_labels), epochs=20, batch_size=BATCH_SIZE)
+model.fit(train_data, to_categorical(train_labels), epochs=40, batch_size=BATCH_SIZE)
+# classes = model.predict(test_data, batch_size=BATCH_SIZE)
 
-# score = model.evaluate(test_data, to_categorical(test_labels),
-#                        batch_size=BATCH_SIZE, verbose=1)
+
+score = model.evaluate(test_data, to_categorical(test_labels), batch_size=BATCH_SIZE, verbose=1)
+
+print_summary(model)
+print('Test score:', score)
 # print('Test score:', score[0])
-# print('Test accuracy:', score[1])
-prediction = model.predict(test_data.iloc[2:3], batch_size=None, verbose=0, steps=None)
+print('Test accuracy:', score[1])
 
-print(test_data.iloc[0:3])
-print(test_data.iloc[2:3])
-print(test_labels[2])
-print(argmax(prediction))
+prediction = model.predict(test_data, batch_size=None, verbose=True, steps=None)
+print(label_names)
+print(confusion_matrix(test_labels, prediction.argmax(axis=1)))
+#
+# print(test_data.iloc[0:4])
+# print(test_data.iloc[3:4])
+# print(test_labels[3])
+# print(argmax(prediction))
 # For a single-input model with 10 classes (categorical classification):
-
-# model = Sequential()
-# model.add(Dense(32, activation='relu', input_dim=100))
-# model.add(Dense(10, activation='softmax'))
-# model.compile(optimizer='rmsprop',
-#               loss='categorical_crossentropy',
-#               metrics=['accuracy'])
-#
-# # Generate dummy data
-# import numpy as np
-# data = np.random.random((1000, 100))
-# labels = np.random.randint(10, size=(1000, 1))
-#
-# # Convert labels to categorical one-hot encoding
-# one_hot_labels = keras.utils.to_categorical(labels, num_classes=10)
-#
-# # Train the model, iterating on the data in batches of 32 samples
-# model.fit(data, one_hot_labels, epochs=10, batch_size=32)
