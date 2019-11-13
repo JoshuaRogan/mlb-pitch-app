@@ -1,0 +1,149 @@
+{
+  "extends": "airbnb",
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": {
+          "resolve": {
+            "extensions": [
+              ".js"
+            ],
+            "modules": [
+              "src",
+              "scripts",
+              "node_modules"
+            ],
+            "symlinks": false
+          }
+        }
+      }
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "forOf": true,
+      "jsx": true,
+      "es6": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "no-console": 0,
+    "max-len": 0,
+    "no-underscore-dangle": 0,
+    "react/jsx-indent": 0,
+    "react/jsx-indent-props": 0,
+    "react/no-array-index-key": 0,
+    "react/sort-comp": [
+      1,
+      {
+        "order": [
+          "static-methods",
+          "instance-variables",
+          "constructor",
+          "lifecycle",
+          "instance-methods",
+          "everything-else",
+          "render"
+        ]
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      2, {
+        "controlComponents": ["Field", "AutoSuggestController"],
+        "depth": 3
+      }
+    ],
+    "jsx-a11y/label-has-for": "off",
+    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*-test.js",
+          "**/*.spec.js",
+          "**/reducers/ReduxTestHelper.js",
+          "scripts/**"
+        ]
+      }
+    ],
+    "import/extensions": [
+      "error",
+      {
+        "es6": "never",
+        "scss": "always",
+        "jsx": "never"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always-and-inside-groups"
+      }
+    ],
+    "react/forbid-prop-types": 0,
+    "no-plusplus": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/mouse-events-have-key-events": 0,
+    "no-restricted-syntax": [
+      "error",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "react/require-default-props": 0,
+    "no-multi-assign": 0,
+    "jsx-a11y/img-has-alt": 0,
+    "react/no-access-state-in-setstate": "error",
+    "react/jsx-filename-extension": 0,
+    "react/destructuring-assignment": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "prefer-destructuring": 0,
+    "no-multi-spaces": 0,
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowShortCircuit": true
+      }
+    ],
+  },
+  "plugins": [
+    "react",
+    "import"
+  ],
+  "globals": {
+    "__DEVSERVER__": true,
+    "__DEVCLIENT__": true,
+    "RELEASE_HASH": true,
+    "test": true
+  }
+}
